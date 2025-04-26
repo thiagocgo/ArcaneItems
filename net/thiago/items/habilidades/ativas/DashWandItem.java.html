@@ -1,0 +1,86 @@
+<html>
+<head>
+<title>DashWandItem.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #5f826b; font-style: italic;}
+.s4 { color: #7a7e85;}
+.s5 { color: #2aacb8;}
+.s6 { color: #6aab73;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+DashWandItem.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">net</span><span class="s2">.</span><span class="s1">thiago</span><span class="s2">.</span><span class="s1">items</span><span class="s2">.</span><span class="s1">habilidades</span><span class="s2">.</span><span class="s1">ativas</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">item</span><span class="s2">.</span><span class="s1">Item</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">item</span><span class="s2">.</span><span class="s1">ItemStack</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">InteractionResultHolder</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">InteractionHand</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">level</span><span class="s2">.</span><span class="s1">Level</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">entity</span><span class="s2">.</span><span class="s1">player</span><span class="s2">.</span><span class="s1">Player</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">world</span><span class="s2">.</span><span class="s1">phys</span><span class="s2">.</span><span class="s1">Vec3</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">ChatFormatting</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">net</span><span class="s2">.</span><span class="s1">minecraft</span><span class="s2">.</span><span class="s1">network</span><span class="s2">.</span><span class="s1">chat</span><span class="s2">.</span><span class="s1">Component</span><span class="s2">;</span>
+
+<span class="s3">/**</span>
+ <span class="s3">* DashWandItem: Ao ser usado, impulsiona o jogador na direção que ele está olhando.</span>
+ <span class="s3">* Se o jogador estiver olhando para cima, adiciona um leve impulso vertical.</span>
+ <span class="s3">* O item entra em cooldown de 60 segundos (1200 ticks).</span>
+ <span class="s3">*/</span>
+<span class="s0">public class </span><span class="s1">DashWandItem </span><span class="s0">extends </span><span class="s1">Item </span><span class="s2">{</span>
+
+    <span class="s0">public </span><span class="s1">DashWandItem</span><span class="s2">(</span><span class="s1">Properties properties</span><span class="s2">) {</span>
+        <span class="s0">super</span><span class="s2">(</span><span class="s1">properties</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public </span><span class="s1">InteractionResultHolder</span><span class="s2">&lt;</span><span class="s1">ItemStack</span><span class="s2">&gt; </span><span class="s1">use</span><span class="s2">(</span><span class="s1">Level level</span><span class="s2">, </span><span class="s1">Player player</span><span class="s2">, </span><span class="s1">InteractionHand hand</span><span class="s2">) {</span>
+        <span class="s1">ItemStack stack </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getItemInHand</span><span class="s2">(</span><span class="s1">hand</span><span class="s2">);</span>
+
+        <span class="s4">// Executa somente no servidor</span>
+        <span class="s0">if </span><span class="s2">(!</span><span class="s1">level</span><span class="s2">.</span><span class="s1">isClientSide</span><span class="s2">()) {</span>
+            <span class="s4">// Obtém o vetor de direção que o jogador está olhando</span>
+            <span class="s1">Vec3 look </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getLookAngle</span><span class="s2">();</span>
+            <span class="s0">double </span><span class="s1">dashSpeed </span><span class="s2">= </span><span class="s5">3.0</span><span class="s2">; </span><span class="s4">// Velocidade base do dash</span>
+            <span class="s4">// Calcula o impulso do dash</span>
+            <span class="s1">Vec3 dashVelocity </span><span class="s2">= </span><span class="s1">look</span><span class="s2">.</span><span class="s1">scale</span><span class="s2">(</span><span class="s1">dashSpeed</span><span class="s2">);</span>
+
+            <span class="s4">// Obtém a velocidade atual do jogador</span>
+            <span class="s1">Vec3 currentVelocity </span><span class="s2">= </span><span class="s1">player</span><span class="s2">.</span><span class="s1">getDeltaMovement</span><span class="s2">();</span>
+
+            <span class="s4">// Se o jogador estiver praticamente parado, use um dash menor</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">currentVelocity</span><span class="s2">.</span><span class="s1">lengthSqr</span><span class="s2">() &lt; </span><span class="s5">0.01</span><span class="s2">) {</span>
+                <span class="s1">dashVelocity </span><span class="s2">= </span><span class="s1">look</span><span class="s2">.</span><span class="s1">scale</span><span class="s2">(</span><span class="s5">1.5</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+            <span class="s4">// Se o jogador estiver olhando para cima (pitch menor que -10), adicione um impulso vertical extra</span>
+            <span class="s0">if </span><span class="s2">(</span><span class="s1">player</span><span class="s2">.</span><span class="s1">getXRot</span><span class="s2">() &lt; -</span><span class="s5">10</span><span class="s2">) {</span>
+                <span class="s1">dashVelocity </span><span class="s2">= </span><span class="s0">new </span><span class="s1">Vec3</span><span class="s2">(</span><span class="s1">dashVelocity</span><span class="s2">.</span><span class="s1">x</span><span class="s2">, </span><span class="s1">dashVelocity</span><span class="s2">.</span><span class="s1">y </span><span class="s2">+ </span><span class="s5">0.5</span><span class="s2">, </span><span class="s1">dashVelocity</span><span class="s2">.</span><span class="s1">z</span><span class="s2">);</span>
+            <span class="s2">}</span>
+
+            <span class="s4">// Em vez de substituir a velocidade, adiciona o dash à velocidade atual</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">setDeltaMovement</span><span class="s2">(</span><span class="s1">currentVelocity</span><span class="s2">.</span><span class="s1">add</span><span class="s2">(</span><span class="s1">dashVelocity</span><span class="s2">));</span>
+
+            <span class="s4">// Em algumas versões, pode ser necessário marcar o jogador para atualizar o movimento:</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">hasImpulse </span><span class="s2">= </span><span class="s0">true</span><span class="s2">; </span><span class="s4">// Isso pode forçar a sincronização do movimento com o cliente</span>
+
+            <span class="s4">// Envia mensagem de confirmação para o jogador</span>
+            <span class="s1">player</span><span class="s2">.</span><span class="s1">sendSystemMessage</span><span class="s2">(</span>
+                    <span class="s1">Component</span><span class="s2">.</span><span class="s1">literal</span><span class="s2">(</span><span class="s6">&quot;Dash activated!&quot;</span><span class="s2">).</span><span class="s1">withStyle</span><span class="s2">(</span><span class="s1">ChatFormatting</span><span class="s2">.</span><span class="s1">GREEN</span><span class="s2">)</span>
+            <span class="s2">);</span>
+        <span class="s2">}</span>
+
+        <span class="s0">return </span><span class="s1">InteractionResultHolder</span><span class="s2">.</span><span class="s1">sidedSuccess</span><span class="s2">(</span><span class="s1">stack</span><span class="s2">, </span><span class="s1">level</span><span class="s2">.</span><span class="s1">isClientSide</span><span class="s2">());</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
